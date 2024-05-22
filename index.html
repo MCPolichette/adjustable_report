@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+		<script
+			type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"
+		></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+		<link rel="icon" type=".gif" href="style/markbounce.gif" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap"
+			rel="stylesheet"
+		/>
+
+		<title>AvantLink ANNUAL report</title>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			media="screen"
+			href="style/style.css"
+		/>
+		 <script>
+    window.onload = function() {
+      // Check if the value exists in the local storage
+      if (localStorage.test) {
+        // Retrieve the value from local storage
+        var storedValue = localStorage.test;
+        // Set the value in the text field
+        document.getElementById("password_input").value = storedValue;
+      }
+    };
+	</script>
+	<style>
+        @media print {
+            .page-break { 
+                page-break-before: always; 
+            }
+        }
+    </style>s
+	</head>
+	<body>
+		<div class="container-sm fixed-top">
+			<div id="title" class="row">
+				<div class="col-6">
+					<h5
+						onclick="use_local_storage()"
+						class="justify-content-center"
+					>
+						<strong>AvantLink <strong> ANNUAL</strong> Merchant Monthly Comparison </strong>
+					</h5>
+				</div>
+			</div>
+		</div>
+		<div
+			class="container-fluid d-flex flex-column min-vh-100 justify-content-center align-items-center"
+			id="first_display"
+		>
+			<div class="row">
+				<div class="card shadow p-3 mb-5 bg-white rounded text-center">
+					<div class="card-body">
+						<div id="passwordHelpBlock" class="form-text">
+							Please enter your required API key to continue and
+							use this project.
+						</div>
+						<br />
+						<input
+							type="password"
+							id="password_input"
+							class="form-control"
+							aria-describedby="passwordHelpBlock"
+						/>
+						<br />
+						<button
+							id="firstSubmit"
+							type="submit"
+							onclick="password_check()"
+							class="btn btn-block btn-primary"
+						>
+							Submit
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div
+			class="container-fluid d-flex flex-column align-items-center collapse"
+		>
+			<div class="row" hidden id="monthlyReport">
+				<div class="col-12">
+					<br />
+					<h1>Adjustable Merchant Report</h1>
+					<div
+						class="accordion shadow p-3 mb-5 bg-white rounded"
+						id="reportAccordian"
+					>
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="parameters">
+								<button
+									class="accordion-button"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapseOne"
+									aria-expanded="true"
+									aria-controls="collapseOne"
+								>
+									<strong>Parameters</strong>
+								</button>
+							</h2>
+							<div
+								id="collapseOne"
+								class="accordion-collapse collapse show"
+								aria-labelledby="parameters"
+								data-bs-parent="#reportAccordian"
+							>
+								<div class="accordion-body">
+									<div class="container-fluid">
+										<div class="row">
+											<h3>
+												Please fill out inputs below:
+											</h3>
+											<hr>
+											<div class="col-6">
+												<h6>Select Merchant</h6>
+												<div class="input-group mb-3">
+													<span
+														class="input-group-text"
+														id="merchantId"
+														>Merchant Id</span
+													>
+													<input
+														type="text"
+														id="merchant_ID_input"
+														class="form-control"
+														aria-describedby="merchantId"
+													/>
+												</div>
+												<h6>Select Dates</h6>
+												 <form id="dateForm">
+                    <div class="form-group">
+                        <label for="startMonth">Start Month/Year</label>
+                        <input type="month" id="startMonth" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endMonth">End Month/Year</label>
+                        <input type="month" id="endMonth" class="form-control" required>
+                    </div>
+                   
+                </form>
+												<div class="form-check" hidden>
+  													<input class="form-check-input" type="checkbox" value="" id="mobileSalesCheck" checked>
+  													<label class="form-check-label" for="mobileSalesCheck">Display Mobile Sales in quickStats
+  													</label></div>
+													<!-- <div class="form-check">
+														<input class="form-check-input" type="checkbox" value="" id="yoyDisplayCheck" checked>
+  													<label class="form-check-label" for="yoyDisplayCheck">Display yoy data in Affiliate report
+  													</label>
+												</div> -->
+												<br>
+												<h6>Select a Network</h6>
+												<div class="form-check">
+												  <input class="form-check-input" type="radio" name="networkRadio" id="networkRadioUS" 						value="US" checked>
+												  <label class="form-check-label" for="networkRadioUS">
+												    US Account
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="radio" name="networkRadio" id="networkRadioCA" 						value="CA">
+												  <label class="form-check-label" for="networkRadioCA">
+												    CA Account
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="radio" name="networkRadio" id="networkRadioAU" 	value="AU" >
+												  <label class="form-check-label" for="networkRadioAU">
+												    AU Account
+												  </label>
+												</div>
+												
+												<div
+													hidden
+													id="first_loading_bar"
+													class="text-center"
+												>
+													<h5>Running APIs</h5>
+													<div
+														class="spinner-border"
+														style="
+															width: 6rem;
+															height: 6rem;
+														"
+														role="status"
+													>
+														<span
+															class="visually-hidden"
+															>Loading...</span
+														>
+													</div>
+												</div>
+												<div class="d-grid gap-2">
+													<button
+														class="btn btn-primary"
+														id="submitBtn"
+														onclick="perfomance_report()"
+														type="button"
+													>
+														Submit
+													</button>
+												</div>
+											</div>
+											<div class="col-6">
+												<div
+													class="card border-primary mb-3"
+												>
+													<div class="card-header">
+														Base Merchant Info
+													</div>
+													<div
+														class="card-body text-primary"
+													>
+														<h5
+															id="merchantCard"
+															class="card-title"
+														>
+															Merchant
+														</h5>
+														<ul>
+															<li
+																id="merchantCardId"
+															></li>
+															<li>
+																Months
+																<ul>
+																	<li
+																		id="merchantCardMonth1"
+																	>
+																		month1
+																	</li>
+																	<li
+																		id="merchantCardMonth2"
+																	>
+																		month2
+																	</li>
+																</ul>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="d-grid gap-2">
+													<button
+														disabled
+														id="affiliate_report_button"
+														class="btn btn-outline-success"
+														onclick="affiliate_report()"
+														type="button"
+													>
+														NEXT STEP: Run API for
+														Affiliate Performance
+													</button>
+												</div>
+												<br />
+												<div class="d-grid gap-2">
+													<button
+														disabled
+														id="product_report_btn"
+														class="btn btn-outline-success"
+														onclick="products_sold_report()"
+														type="button"
+													>
+														NEXT STEP: run Product
+														Report API
+													</button>
+												</div>
+												<br />
+												<!-- <div class="d-grid gap-2">
+													<button 
+													id="dailyReportButton" 
+													class="btn btn-outline-success" 
+													disabled 
+													onclick="runDailyChart()">Run Daily Report Graphs</button>
+												</div> -->
+												<br />
+												<div class="d-grid gap-2">
+													<button
+														disabled
+														id="subAffiliate_report_btn"
+														class="btn btn-outline-success"
+														onclick="subAffiliate_report()"
+														type="button"
+													>
+														NEXT STEP: run Sub-Affiliate Report API
+													</button>
+												</div>
+												<br />
+												<div class="d-grid gap-2">
+													<button
+														disabled
+														id="select_affiliates_btn"
+														class="btn btn-outline-success"
+														data-bs-toggle="collapse"
+														data-bs-target="#affiliateDataAccordian"
+														aria-expanded="false"
+														aria-controls="affiliateDataAccordian"
+														type="button"
+													>
+														NEXT STEP: Select
+														Affiliates for specific
+														reports:
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="Affiliate Data">
+								<button
+									class="accordion-button collapsed"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#affiliateDataAccordian"
+									aria-expanded="false"
+									aria-controls="affiliateDataAccordian"
+								>
+									<strong>Affiliate Data and Notes</strong>
+								</button>
+							</h2>
+							<div
+								id="affiliateDataAccordian"
+								class="accordion-collapse collapse"
+								aria-labelledby="Affiliate Data"
+								data-bs-parent="#reportAccordian"
+							>
+								<div class="accordion-body">
+									<div class="row">
+										
+									</div>
+									<div class="row">
+										<div class="col-6 mx-auto">
+											
+											
+											</div>
+											<div class="col-6">
+												
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-10">
+											<p>Notes can be added in the document below</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="reportHeader">
+									<button
+										class="accordion-button collapsed"
+										type="button"
+										data-bs-toggle="collapse"
+										data-bs-target="#reportAccordian"
+										aria-expanded="false"
+										aria-controls="reportAccordian"
+									>
+										<strong> Report</strong>
+									</button>
+								</h2>
+								<div
+									id="reportAccordian"
+									class="accordion-collapse collapse"
+									aria-labelledby="reportHeader"
+									data-bs-parent="#reportAccordian"
+								>
+									<div class="accordion-body">
+										
+										<div class="row">
+											<div class ='col-12'>
+												<h4> Notes about the report below</h4>
+												<div class = 'noteInputSection'>
+													All Yellow buttons and Highlighted sections will be removed with teh print button at the bottom of the screen
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="report_display" hidden>
+				<div class="container-lg shadow page-break" id="report_pdf">
+					<div class="row">
+						<div class="col-4">
+						<img
+							src="assets/AvantLink Logo.png"
+							alt="AvantLink Support Help Center home page"
+							style="width: 300px"
+						/></div>
+						<div class="col-8"><br>
+							<h4 class="align-middle" id="report_merchant_name">MERCHANT NAME</h4>
+						<h4 class="align-middle" id="report_timeframe">Dsiplay Dates</h4>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-8 test">
+							<h4>Key Metrics</h4>
+							<div class="row ">
+								<div class=" rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keySales" ></h6>
+								<p>Total Revenue</p></div>
+									</div>
+								<div class="rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keyNumber_of_Sales" ></h6>
+								<p>Number of Sales</p></div>
+									</div>
+								<div class="rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keyClicks" ></h6>
+								<p>Click Throughs</p></div>
+									</div>
+									</div><br><div class="row">
+								<div class="rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keyAvg_Sale" ></h6>
+								<p>Avg Sale Amount</p></div>
+									</div>
+								<div class="rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keyConversionRate" ></h6>
+								<p>Conversion Rate</p></div>
+									</div>
+								<div class="rounded col-4 keyBox1 ">
+									<div class="border 	border-primary border-3 keyBoxIn">
+									<h6 id="keyNewAffs" ></h6>
+								<p>Total Spend</p></div>
+									</div>
+							</div>
+						</div>
+						<div
+							class="col-4 justify-content-center align-items-center"
+						>
+							<br />
+							<hr />
+							<img
+								id="merchant_logo"
+								src="https://static.avantlink.com/merchant-logos/10048.png"
+								alt="logo"
+								style=" max-width: 300px; max-height: 150px; width: auto; height: auto; margin: auto"
+								class="img-fluid"
+							/>
+							<hr />
+						</div>
+						<div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'yoyAndMomRowBtn'onclick="hideRow('yoyAndMomRow', 'yoyAndMomRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+						<div class="row align-top" id='yoyAndMomRow'>
+							<div class="col-12">
+								<hr>
+								<h4 id="ytdSummaryReportHeader">
+									YTD Monthly Summary Report
+								</h4>
+								<table
+									id="ytdSummaryReport"
+									class="table table-striped centered table-sm"
+								>
+									<tbody style="font-size: medium">
+										<thead id="ytdSummaryTHead"></thead>
+									</tbody>
+								</table>
+							</div>
+							
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<h4>Monthly Sales Performance</h4>
+							<div id="monthlyPerformanceGraph" style="width: auto"></div>
+						</div>
+							<!-- <div class="col-12">
+							<h4>Daily Sales Performance</h4>
+							<div id="dailyPerformanceGraph" style="width: auto"></div>
+						</div> -->
+						</div>
+							<div class="col-12" hidden="true">
+							<h4>Number of Sales Performance</h4>
+							<div id="secondPerformanceChart" style="width: auto"></div>
+						</div>
+					<div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'topAffRowBtn'onclick="hideRow('topAffRow', 'topAffRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+					<div class="row page-break" id="topAffRow">
+						<div class="col-12" style="margin-top: 50px;">
+							<h4>Top Affiliate Performances</h4>
+							<div class="input-group mb-3 border border-warning removeForPrint border-4">
+  								<input type="text"id="updateTopPerformers" class="form-control bg-warning removeForPrint" placeholder="Change Number of displayed Affiliates" aria-label="Change Number of Affiliates" aria-describedby="updateTopPerformers">
+  								<button class="btn btn-warning removeForPrint" onclick="updateTopPerformers()"type="button" >Click to Change # of displayed Performers</button>
+							</div>
+							<table
+								id="affiliateSummaryReport"
+								class="table table-striped centered table-sm"
+							>
+								<tbody style="font-size: small">
+									<thead id="affTableTHead"></thead>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- <div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'newPartnerRowBtn'onclick="hideRow('newPartnerRow', 'newPartnerRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+					<div class="row"id="newPartnerRow">
+						
+						<div id="newAffCol" class="col-6">
+							<h4>New Partner Performance</h4>
+							<table
+								id="newPartnerReport"
+								class="table table-striped centered "
+							><tbody style="font-size: small">
+								<thead id="newPartnerPerformanceTitle">
+								
+								</thead></tbody>
+							</table>
+						</div>
+					</div> -->
+						<!-- <div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'growAndDeclineRowBtn'onclick="hideRow('growAndDeclineRow', 'growAndDeclineRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div> -->
+					<!-- <div class="row" id="growAndDeclineRow">
+						<div class="col-6">
+							<h4>Top Growing YoY Performance</h4>
+							<table
+								id="growing_report"
+								class="table table-striped centered table-sm"
+							>
+								<tbody style="font-size: x-small">
+									<thead id="gTableTHead"></thead>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-6">
+							<h4>Top Declining YoY Performance</h4>
+							<table
+								id="declining_report"
+								class="table table-striped centered table-sm"
+							>
+								<tbody style="font-size: x-small">
+									<thead id="dTableTHead"></thead>
+								</tbody>
+							</table>
+						</div>
+					 <div class="row"> 
+						<div class="col-12">
+							<p>
+								*Affiliates with $0 Sales in either period were
+								filtered out of the above display
+							</p>
+							<p>
+								NOTE: This report queries performance summary
+								details over the reported Month, as well as for
+								a time period of the same length exactly one
+								year earlier. The two sets of results are then
+								used to compute the percent change for each
+								statistic.
+							</p>
+					</div> -->
+					<!-- </div> -->
+					<div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'subAffRowBtn'onclick="hideRow('subAffRow', 'subAffRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+					<div class="row"id="subAffRow">
+						
+						<br />
+						<div class="col-12">
+							<h4>Sub Affiliate Report</h4>
+							<table
+								id="subAffiliateSummaryReport"
+								class="table table-striped centered table-sm"
+							>
+								<tbody style="font-size: small">
+									<thead id="subAffTableTHead"></thead>
+								</tbody>
+							</table>
+						</div>
+					</div><div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'productRowBtn'onclick="hideRow('productsRow', 'productRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+					<div id="productsRow" class="row">
+						<div class="col-12">
+							<h4>Products Sold Report</h4>
+							<table
+								id="productsSoldReport"
+								class="table table-striped centered table-sm"
+							><thead id="productTHead"></thead>
+								<tbody style="font-size: small">
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+					
+
+			<!-- Section for displaying notes -->
+			<div class=" removeForPrint close justify-content-md-end">
+							<button type="button" id= 'notesRowBtn'onclick="hideRow('notesRow', 'notesRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
+						</div>
+			<div class="col-12" id="notesRow">
+				
+			<div id="noteDisplaySection">
+				<h2>Additional Notes:</h2>
+				<div id="notesContainer"></div>
+			</div></div>
+			<div id="noteInputSection" class="row border border-warning border-4 removeForPrint">
+						<div class="col-8 ">
+				<h4>Add Note</h4>
+				<p>(This input display will be removed for printing/exporting)</p>
+				<div class="form-group">
+					<label for="noteTitle">Note Title:</label>
+					<input type="text" class="form-control" id="noteTitle" />
+				</div>
+				<div class="form-group">
+					<label for="noteText">Note Text:</label>
+
+					<textarea
+						class="form-control"
+						placeholder="NOTES GO HERE!"
+						id="noteText"
+						wrap="hard"
+						style="height: 100px"
+					></textarea>
+				</div>
+				<button class="btn btn-warning" id="addNoteBtn">
+					Add Note
+				</button>
+			</div></div>
+
+					<div class="row" id="manual-report-data">
+						
+							<div class="col-4">
+								<br /><button
+									type="button"
+									onclick="generatePDF()"
+									class="btn btn-info"
+								>
+									Click Button to remove the Menu Options above, so that you can print as a PDF
+								</button>
+							</div>
+						
+					</div>
+				</div>
+				<div class="container-fluid"></div>
+			</div>
+		</div></div>
+
+		<script src="assets/API_reports.js"></script>
+		<script src="assets/affiliate_scripts.js"></script>
+		<script src="assets/build_tables.js"></script>
+		<script src="assets/products_scripts.js"></script>
+		<script src="assets/app.js"></script>
+		<script src="assets/read_file.js"></script>
+		<script src="assets/graphs.js"></script>
+		<script src="assets/export_files.js"></script>
+		<script src="assets/notes.js"></script>
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+		<!-- Option 2: Separate Popper and Bootstrap JS -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+			integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+			integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+			crossorigin="anonymous"
+		></script>
+		<script>
+			var popoverTriggerList = [].slice.call(
+				document.querySelectorAll('[data-bs-toggle="popover"]')
+			);
+			var popoverList = popoverTriggerList.map(function (
+				popoverTriggerEl
+			) {
+				return new bootstrap.Popover(popoverTriggerEl);
+			});
+		</script>
+	</body>
+</html>

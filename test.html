@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Notes Management</title>
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+	</head>
+	<body>
+		<div class="container mt-4">
+			<h1>Notes App</h1>
+
+			<!-- Section for inputting notes -->
+			<div id="noteInputSection">
+				<h2>Add Note</h2>
+				<div class="form-group">
+					<label for="noteTitle">Note Title:</label>
+					<input type="text" class="form-control" id="noteTitle" />
+				</div>
+				<div class="form-group">
+					<label for="noteText">Note Text:</label>
+
+					<textarea
+						class="form-control"
+						placeholder="NOTES GO HERE!"
+						id="noteText"
+						wrap="hard"
+						style="height: 100px"
+					></textarea>
+				</div>
+				<button class="btn btn-primary" id="addNoteBtn">
+					Add Note
+				</button>
+			</div>
+
+			<!-- Section for displaying notes -->
+			<div id="noteDisplaySection">
+				<h2>Notes</h2>
+				<div id="notesContainer"></div>
+			</div>
+		</div>
+
+		<script src="assets/notes.js"></script>
+	</body>
+</html>
