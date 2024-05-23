@@ -46,9 +46,26 @@ function tableHeaders(tableID, array) {
 	}
 }
 function updateHeaders() {
-	const displayStartDate = new Date(startDate);
-	const displayEndDate = new Date(endDate);
+	// Parse the date strings and create Date objects
+	const startDateParts = startDate.split("-");
+	const endDateParts = endDate.split("-");
+
+	const displayStartDate = new Date(
+		startDateParts[0],
+		startDateParts[1] - 1,
+		startDateParts[2]
+	);
+	const displayEndDate = new Date(
+		endDateParts[0],
+		endDateParts[1] - 1,
+		endDateParts[2]
+	);
+	//checking to ensure this update is right
+
+	// Options for formatting the date
 	const options = { year: "numeric", month: "long" };
+
+	// Format the dates
 	const formattedStartDate = displayStartDate.toLocaleDateString(
 		"en-US",
 		options
