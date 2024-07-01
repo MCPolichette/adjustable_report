@@ -15,8 +15,8 @@ var report = {
 	monthArray: [],
 	showMobile: true,
 };
-var formattedStartDate = "";
-var formattedEndDate = "";
+var startDate = "";
+var endDate = "";
 var data = {
 	monthlyPerformanceSummary: [],
 	notablePerformers: { one: [], two: [], three: [] },
@@ -126,6 +126,20 @@ function DateToString(date) {
 function daysInMonth(month, year) {
 	return new Date(year, month, 0).getDate();
 }
+
+function getLastDayOfMonth(yearMonth) {
+	const [year, month] = yearMonth.split("-").map(Number);
+
+	// Create a date for the first day of the next month
+	const date = new Date(year, month, 0);
+
+	// Get the last day of the month in YYYY-MM-DD format
+	const yearStr = date.getFullYear();
+	const monthStr = String(date.getMonth() + 1).padStart(2, "0");
+	const dayStr = String(date.getDate()).padStart(2, "0");
+
+	return `${yearStr}-${monthStr}-${dayStr}`;
+}
 function use_local_storage() {
 	let x = window.localStorage.test;
 	document.getElementById("password_input").value = x;
@@ -167,12 +181,13 @@ function perfomance_report() {
 		return;
 	}
 
-	const startDate = new Date(startMonth + "-01");
-	const endDate = new Date(endMonth + "-01");
+	startDate = startMonth + "-01";
+	endDate = getLastDayOfMonth(endMonth);
 	console.log(endDate);
-	endDate.setMonth(endDate.getMonth() + 2);
-	endDate.setDate(0);
-	console.log(endDate);
+	console.log(startDate);
+	// endDate.setMonth(endDate.getMonth() + 2);
+	// endDate.setDate(0);
+	// console.log(endDate);
 
 	const today = new Date();
 	today.setHours(0, 0, 0, 0); // Reset to midnight for accurate comparison
@@ -203,13 +218,11 @@ function perfomance_report() {
 		return;
 	}
 
-	formattedStartDate = startDate.toISOString().split("T")[0];
-	formattedEndDate = endDate.toISOString().split("T")[0];
 	if (acceptableData === true) {
 		runAPI({
 			report_id: 48,
-			startDate: formattedStartDate,
-			endDate: formattedEndDate,
+			startDate: startDate,
+			endDate: endDate,
 		});
 	}
 }
@@ -223,8 +236,8 @@ function affiliate_report() {
 </div>`;
 	runAPI({
 		report_id: 15,
-		startDate: formattedStartDate,
-		endDate: formattedEndDate,
+		startDate: startDate,
+		endDate: endDate,
 		month: "primary",
 	});
 }
@@ -232,8 +245,8 @@ function products_sold_report() {
 	document.getElementById("first_loading_bar").hidden = false;
 	runAPI({
 		report_id: 18,
-		startDate: formattedStartDate,
-		endDate: formattedEndDate,
+		startDate: startDate,
+		endDate: endDate,
 		month: "primary",
 	});
 }
@@ -242,8 +255,8 @@ function subAffiliate_report() {
 	document.getElementById("first_loading_bar").hidden = false;
 	runAPI({
 		report_id: 96,
-		startDate: formattedStartDate,
-		endDate: formattedEndDate,
+		startDate: startDate,
+		endDate: endDate,
 		month: "primary",
 	});
 }
