@@ -14,6 +14,7 @@ var report = {
 	itemCount: 10,
 	monthArray: [],
 	showMobile: true,
+	yoy: false,
 };
 var startDate = "";
 var endDate = "";
@@ -24,12 +25,6 @@ var data = {
 };
 function isNumber(value) {
 	return typeof value === "number" && isFinite(value);
-}
-function removeYearFromDate(dateString) {
-	var parts = dateString.split("/");
-	var month = parts[0];
-	var day = parts[1];
-	return month + "/" + day;
 }
 var icons = {
 	up: `<i class="fa fa-caret-square-o-up" style="color:green"></i>`,
@@ -113,33 +108,6 @@ function updateDivArray(array, text) {
 	}
 }
 
-function DateToString(date) {
-	let options = {
-		// weekday: "short", //to display the full name of the day, you can use short to indicate an abbreviation of the day
-		day: "numeric",
-		month: "long", //to display the full name of the month
-		year: "numeric",
-	};
-	var sDay = date.toLocaleDateString("en-US", options);
-	return sDay;
-}
-function daysInMonth(month, year) {
-	return new Date(year, month, 0).getDate();
-}
-
-function getLastDayOfMonth(yearMonth) {
-	const [year, month] = yearMonth.split("-").map(Number);
-
-	// Create a date for the first day of the next month
-	const date = new Date(year, month, 0);
-
-	// Get the last day of the month in YYYY-MM-DD format
-	const yearStr = date.getFullYear();
-	const monthStr = String(date.getMonth() + 1).padStart(2, "0");
-	const dayStr = String(date.getDate()).padStart(2, "0");
-
-	return `${yearStr}-${monthStr}-${dayStr}`;
-}
 function use_local_storage() {
 	let x = window.localStorage.test;
 	document.getElementById("password_input").value = x;
@@ -169,12 +137,21 @@ function getMerchantLogo() {
 function perfomance_report() {
 	loadButton("submitBtn");
 	var acceptableData = true;
-	merchant.id = document.getElementById("merchant_ID_input").value;
-	document.getElementById("merchant_logo").src = getMerchantLogo();
-	// SETTING DATES W/ updated selector
 	const startMonth = document.getElementById("startMonth").value;
 	const endMonth = document.getElementById("endMonth").value;
 	console.log(startMonth, endMonth);
+	merchant.id = document.getElementById("merchant_ID_input").value;
+	document.getElementById("merchant_logo").src = getMerchantLogo();
+	document.getElementById("merchantCardMonth1").innerHTML = startMonth;
+	document.getElementById("merchantCardMonth2").innerHTML = endMonth;
+	document.getElementById("merchantCardId").innerHTML = "ID: " + merchant.id;
+	if (document.getElementById("yoyReport").checked) {
+		console.log("YOY REPORT");
+		report.yoy = true;
+		document.getElementById("merchantCardReportType").innerHTML =
+			"YOY REPORT";
+	}
+	// SETTING DATES W/ updated selector
 
 	if (!startMonth || !endMonth) {
 		alert("Please select both start and end month/year.");

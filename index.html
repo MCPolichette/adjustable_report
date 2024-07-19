@@ -24,7 +24,7 @@
 			rel="stylesheet"
 		/>
 
-		<title>AvantLink ANNUAL report</title>
+		<title>AvantLink Adjustable report</title>
 		<link
 			rel="stylesheet"
 			type="text/css"
@@ -147,17 +147,17 @@
 													/>
 												</div>
 												<h6>Select Dates</h6>
-												 <form id="dateForm">
-                    <div class="form-group">
-                        <label for="startMonth">Start Month/Year</label>
-                        <input type="month" id="startMonth" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endMonth">End Month/Year</label>
-                        <input type="month" id="endMonth" class="form-control" required>
-                    </div>
+												<form id="dateForm">
+                   									 <div class="form-group">
+                   									     <label for="startMonth">Start Month/Year</label>
+                   									     <input type="month" id="startMonth" class="form-control" required>
+                   									 </div>
+                   									 <div class="form-group">
+                   									     <label for="endMonth">End Month/Year</label>
+                   									     <input type="month" id="endMonth" class="form-control" required>
+                   									 </div>
                    
-                </form>
+                								</form>
 												<div class="form-check" hidden>
   													<input class="form-check-input" type="checkbox" value="" id="mobileSalesCheck" checked>
   													<label class="form-check-label" for="mobileSalesCheck">Display Mobile Sales in quickStats
@@ -187,7 +187,15 @@
 												    AU Account
 												  </label>
 												</div>
-												
+												<hr>
+												<div class="form-check">
+        										    <input class="form-check-input" type="checkbox" value="true" id="yoyReport">
+        										    <label class="form-check-label" for="yoyReport">
+        										        YOY report
+        										    </label>
+        										</div>
+												<hr>
+
 												<div
 													hidden
 													id="first_loading_bar"
@@ -238,9 +246,15 @@
 														<ul>
 															<li
 																id="merchantCardId"
-															></li>
+															>
+															ID
+															</li>
+															<li id="merchantCardReportType">
+																Standard Report
+
+															</li>
 															<li>
-																Months
+																Report Range
 																<ul>
 																	<li
 																		id="merchantCardMonth1"
@@ -290,7 +304,7 @@
 													disabled 
 													onclick="runDailyChart()">Run Daily Report Graphs</button>
 												</div> -->
-												<br />
+												<!-- <br /> -->
 												<div class="d-grid gap-2">
 													<button
 														disabled
@@ -407,7 +421,7 @@
 					<div class="row">
 						<div class="col-4">
 						<img
-							src="assets/AvantLink Logo.png"
+							src="style/AvantLink Logo.png"
 							alt="AvantLink Support Help Center home page"
 							style="width: 300px"
 						/></div>
@@ -474,7 +488,7 @@
 							<div class="col-12">
 								<hr>
 								<h4 id="ytdSummaryReportHeader">
-									YTD Monthly Summary Report
+									Selected Months Summary Report
 								</h4>
 								<table
 									id="ytdSummaryReport"
@@ -615,7 +629,6 @@
 						</div>
 					</div>
 					
-
 			<!-- Section for displaying notes -->
 			<div class=" removeForPrint close justify-content-md-end">
 							<button type="button" id= 'notesRowBtn'onclick="hideRow('notesRow', 'notesRowBtn')" class="close btn btn-sm btn-warning " aria-label="Close"> Hide the Display Below </button>
@@ -636,7 +649,6 @@
 				</div>
 				<div class="form-group">
 					<label for="noteText">Note Text:</label>
-
 					<textarea
 						class="form-control"
 						placeholder="NOTES GO HERE!"
@@ -649,34 +661,37 @@
 					Add Note
 				</button>
 			</div></div>
-
-					<div class="row" id="manual-report-data">
-						
+					<div class="row" id="manual-report-data">						
 							<div class="col-4">
-								<br /><button
+								<br />
+								<button
 									type="button"
 									onclick="generatePDF()"
 									class="btn btn-info"
 								>
 									Click Button to remove the Menu Options above, so that you can print as a PDF
 								</button>
-							</div>
-						
+							</div>						
 					</div>
 				</div>
 				<div class="container-fluid"></div>
 			</div>
-		</div></div>
-
-		<script src="assets/API_reports.js"></script>
-		<script src="assets/affiliate_scripts.js"></script>
-		<script src="assets/build_tables.js"></script>
-		<script src="assets/products_scripts.js"></script>
+		</div>
+	</div>
 		<script src="assets/app.js"></script>
-		<script src="assets/read_file.js"></script>
-		<script src="assets/graphs.js"></script>
-		<script src="assets/export_files.js"></script>
-		<script src="assets/notes.js"></script>
+		<script src="assets/API/API_reports.js"></script>
+		<script src="assets/API/subAffReport.js"></script>
+		<script src="assets/tables/build_tables.js"></script>
+		<script src="assets/tables/yoyMonthlyTables.js"></script>
+		<script src="assets/graphs/graphs.js"></script>
+		<script src="assets/graphs/dailySalesVConversions.js"></script>
+		<script src="assets/scripts/notes.js"></script>
+		<script src="assets/scripts/products_scripts.js"></script>		
+		<script src="assets/scripts/affiliate_scripts.js"></script>
+		<script src="assets/scripts/date_logic.js"></script>
+		<script src="assets/scripts/read_file.js"></script>
+		<script src="assets/scripts/export_files.js"></script>
+		
 		<!-- Option 1: Bootstrap Bundle with Popper -->
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
