@@ -162,9 +162,6 @@ function perfomance_report() {
 	endDate = getLastDayOfMonth(endMonth);
 	console.log(endDate);
 	console.log(startDate);
-	// endDate.setMonth(endDate.getMonth() + 2);
-	// endDate.setDate(0);
-	// console.log(endDate);
 
 	const today = new Date();
 	today.setHours(0, 0, 0, 0); // Reset to midnight for accurate comparison
@@ -196,11 +193,15 @@ function perfomance_report() {
 	}
 
 	if (acceptableData === true) {
-		runAPI({
-			report_id: 48,
-			startDate: startDate,
-			endDate: endDate,
-		});
+		switch (yoy) {
+			case false:
+				runAPI({
+					type: yoy,
+					report_id: 48,
+					startDate: startDate,
+					endDate: endDate,
+				});
+		}
 	}
 }
 //THESE  SCRIPTS REQUIRE NO EDITS:

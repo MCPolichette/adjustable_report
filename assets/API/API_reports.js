@@ -43,7 +43,7 @@ function runAPI(report) {
 		)
 		.then((data) =>
 			// console.log(data)
-			reportStep2(data, report_id, startDate, endDate)
+			reportStep2(data, report_id, startDate, endDate, report.type)
 		);
 }
 function getSelectedValue() {
@@ -60,17 +60,18 @@ function getSelectedValue() {
 	console.log("No Account Type selected");
 	return null;
 }
-function reportStep2(xml, report_id) {
+function reportStep2(xml, report_id, start, end, type) {
 	console.log("API STEP 2:", report_id, startDate, endDate);
 	switch (report_id) {
 		case 96:
-			//SUBAFFILIATE REPORT
+			//Sub-Affiliate Performance Report
 			subAffiliates = subaffData(xml);
 			console.log(subAffiliates);
 			report.subAffiliates = subAffiliates;
 			buildSubAffTable(report.subAffiliates);
 			break;
 		case 48:
+			// Performance Summary by Month
 			let monthCount = xmlDoc.getElementsByTagName("Month").length;
 			console.log(monthCount);
 			for (i = 0; i < monthCount; i++) {
@@ -188,6 +189,7 @@ function reportStep2(xml, report_id) {
 
 			break;
 		case 18:
+			// Product Sold Report
 			console.log(xmlDoc.getElementsByTagName("Product_SKU").length);
 			if (
 				xmlDoc.getElementsByTagName("Product_SKU").length <
@@ -226,62 +228,14 @@ function reportStep2(xml, report_id) {
 			);
 
 			break;
-		// case 12:
-		// MAY COME BACK TO THIS> MAY RUN IN THE SCENARIO WHERE ONLY ONE MONTH IS SELECTED
-		// 	let days = xmlDoc.getElementsByTagName("Sales").length;
-		// 	console.log(days);
-		// 	let dailyArr = [["Day", "Sales", "Conversion Rate"]];
-		// 	let secondArr = [["Day", "Number of Sales", "Conversion Rate"]];
-		// 	for (let i = 0; i < days; i++) {
-		// 		dailyArr.push([
-		// 			removeYearFromDate(
-		// 				xmlDoc.getElementsByTagName("Date")[i].textContent
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Sales")
-		// 					[i].innerHTML.replaceAll(",", "")
-		// 					.replaceAll("$", "")
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Conversion_Rate")
-		// 					[i].innerHTML.replaceAll("%", "")
-		// 			) / 100,
-		// 		]);
-		// 		secondArr.push([
-		// 			removeYearFromDate(
-		// 				xmlDoc.getElementsByTagName("Date")[i].textContent
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Number_of_Sales")
-		// 					[i].innerHTML.replaceAll(",", "")
-		// 					.replaceAll("$", "")
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Conversion_Rate")
-		// 					[i].innerHTML.replaceAll("%", "")
-		// 			) / 100,
-		// 		]);
-		// 	}
-		// 	console.log(dailyArr);
-		// 	data.SaleNumPerformance = secondArr;
-		// 	data.dailyPerformance = dailyArr;
-		// 	drawDailySalesVConversionChart(
-		// 		"Daily Sales and Conversions",
-		// 		"dailyPerformanceGraph",
-		// 		"sales"
-		// 	);
-		// 	break;
-		case 1: //Performance Summary
+		case 1:
+			//Performance Summary
 			console.log(xml);
 			merchant.name =
 				xmlDoc.getElementsByTagName(
 					"Merchant"
 				)[0].childNodes[0].nodeValue;
-			// ------------------
+
 			let totals = {};
 
 			totals.Ad_Impressions = Number(
@@ -388,7 +342,8 @@ function reportStep2(xml, report_id) {
 			// removeDisabledButton("viewReport");
 			console.log("end performance setting");
 			break;
-		case 15: //Performance Summary by Affiliate for selected dates
+		case 15:
+			//Performance Summary by Affiliate for selected dates
 			let affiliates = [];
 			xmlDoc = xml.getElementsByTagName("Table1");
 			console.log(xmlDoc.length);
