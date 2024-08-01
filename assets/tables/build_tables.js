@@ -74,9 +74,7 @@ function updateHeaders() {
 		"en-US",
 		options
 	);
-
 	document.getElementById("merchantCard").innerHTML = merchant.name;
-	document.getElementById("merchantCardId").innerHTML = "ID: " + merchant.id;
 	document.getElementById("report_merchant_name").innerHTML =
 		"Performance Report - " + merchant.name + ", ID: " + merchant.id;
 	document.getElementById("report_timeframe").innerHTML =

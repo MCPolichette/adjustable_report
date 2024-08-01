@@ -62,3 +62,19 @@ h6 {
 		margin: 200px; /* Adjust the margin value as needed */
 	}
 }
+.yoyTable td:nth-child(1),
+.yoyTable th:nth-child(1),
+.yoyTable td:nth-child(4),
+.yoyTable th:nth-child(4),
+.yoyTable td:nth-child(7),
+.yoyTable th:nth-child(7),
+.yoyTable td:nth-child(10),
+.yoyTable th:nth-child(10),
+.yoyTable td:nth-child(13),
+.yoyTable th:nth-child(13),
+.yoyTable td:nth-child(16),
+.yoyTable th:nth-child(16),
+.yoyTable td:nth-child(19),
+.yoyTable th:nth-child(19) {
+	border-right: 2px solid black;
+}

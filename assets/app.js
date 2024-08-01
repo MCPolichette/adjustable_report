@@ -1,5 +1,6 @@
 // global variables
 var merchant = {};
+var xmlDoc;
 var report = {
 	hideYoY: true,
 	yoyPerformance: [],
@@ -13,23 +14,23 @@ var report = {
 	topAffiliateCount: 10,
 	itemCount: 10,
 	monthArray: [],
+	yoyMonthArray: [],
 	showMobile: true,
+	yoy: false,
 };
 var startDate = "";
 var endDate = "";
+var lyStartDate = "";
+var lyEndDate = "";
 var data = {
 	monthlyPerformanceSummary: [],
 	notablePerformers: { one: [], two: [], three: [] },
 	newAffs: {},
+	primaryMonths: [],
+	priorMonths: [],
 };
 function isNumber(value) {
 	return typeof value === "number" && isFinite(value);
-}
-function removeYearFromDate(dateString) {
-	var parts = dateString.split("/");
-	var month = parts[0];
-	var day = parts[1];
-	return month + "/" + day;
 }
 var icons = {
 	up: `<i class="fa fa-caret-square-o-up" style="color:green"></i>`,
@@ -60,6 +61,7 @@ function hideRow(rowId, btnId) {
 		row.hidden = true;
 	}
 }
+// !!CREATE BUTTON SCRIPT FILE
 function removeDisabledButton(id) {
 	let btn = document.getElementById(id);
 	btn.disabled = false;
@@ -113,33 +115,6 @@ function updateDivArray(array, text) {
 	}
 }
 
-function DateToString(date) {
-	let options = {
-		// weekday: "short", //to display the full name of the day, you can use short to indicate an abbreviation of the day
-		day: "numeric",
-		month: "long", //to display the full name of the month
-		year: "numeric",
-	};
-	var sDay = date.toLocaleDateString("en-US", options);
-	return sDay;
-}
-function daysInMonth(month, year) {
-	return new Date(year, month, 0).getDate();
-}
-
-function getLastDayOfMonth(yearMonth) {
-	const [year, month] = yearMonth.split("-").map(Number);
-
-	// Create a date for the first day of the next month
-	const date = new Date(year, month, 0);
-
-	// Get the last day of the month in YYYY-MM-DD format
-	const yearStr = date.getFullYear();
-	const monthStr = String(date.getMonth() + 1).padStart(2, "0");
-	const dayStr = String(date.getDate()).padStart(2, "0");
-
-	return `${yearStr}-${monthStr}-${dayStr}`;
-}
 function use_local_storage() {
 	let x = window.localStorage.test;
 	document.getElementById("password_input").value = x;
@@ -169,26 +144,35 @@ function getMerchantLogo() {
 function perfomance_report() {
 	loadButton("submitBtn");
 	var acceptableData = true;
-	merchant.id = document.getElementById("merchant_ID_input").value;
-	document.getElementById("merchant_logo").src = getMerchantLogo();
-	// SETTING DATES W/ updated selector
 	const startMonth = document.getElementById("startMonth").value;
 	const endMonth = document.getElementById("endMonth").value;
 	console.log(startMonth, endMonth);
+	merchant.id = document.getElementById("merchant_ID_input").value;
+	document.getElementById("merchant_logo").src = getMerchantLogo();
+	document.getElementById("merchantCardMonth1").innerHTML = startMonth;
+	document.getElementById("merchantCardMonth2").innerHTML = endMonth;
+	document.getElementById("merchantCardId").innerHTML = "ID: " + merchant.id;
+	if (document.getElementById("yoyReport").checked) {
+		console.log("YOY REPORT");
+		report.yoy = true;
+		document.getElementById("merchantCardReportType").innerHTML =
+			"YOY REPORT";
+	} else {
+		report.yoy = false;
+	}
+	// SETTING DATES W/ updated selector
 
 	if (!startMonth || !endMonth) {
 		alert("Please select both start and end month/year.");
 		return;
 	}
-
 	startDate = startMonth + "-01";
 	endDate = getLastDayOfMonth(endMonth);
+	lyStartDate = getLyStart(startMonth);
+	lyEndDate = getLastYearEndDate(endMonth);
 	console.log(endDate);
 	console.log(startDate);
-	// endDate.setMonth(endDate.getMonth() + 2);
-	// endDate.setDate(0);
-	// console.log(endDate);
-
+	console.log("PRIOR YEAR DATES : " + lyStartDate + lyEndDate);
 	const today = new Date();
 	today.setHours(0, 0, 0, 0); // Reset to midnight for accurate comparison
 	const startOfNextMonth = new Date(
@@ -219,11 +203,21 @@ function perfomance_report() {
 	}
 
 	if (acceptableData === true) {
-		runAPI({
-			report_id: 48,
-			startDate: startDate,
-			endDate: endDate,
-		});
+		if (report.yoy) {
+			runAPI({
+				type: "yoy",
+				report_id: 48,
+				startDate: startDate,
+				endDate: endDate,
+			});
+		} else {
+			runAPI({
+				type: "standard",
+				report_id: 48,
+				startDate: startDate,
+				endDate: endDate,
+			});
+		}
 	}
 }
 //THESE  SCRIPTS REQUIRE NO EDITS:

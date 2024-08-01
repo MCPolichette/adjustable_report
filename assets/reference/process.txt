@@ -1,0 +1,8 @@
+
+
+Goal run two APIs and distinguish the data
+
+API should run process. 
+return(data)
+
+MAP should return data. and trigger next with previous years months.

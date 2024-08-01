@@ -1,7 +1,5 @@
-function runAPI(report) {
-	startDate = report.startDate;
-	endDate = report.endDate;
-	report_id = report.report_id;
+function runAPI(api_parts) {
+	report_id = api_parts.report_id;
 	let network = "";
 	switch (getSelectedValue()) {
 		case "CA":
@@ -10,7 +8,6 @@ function runAPI(report) {
 			break;
 		case "US":
 			console.log("US");
-
 			break;
 		case "AU":
 			console.log("AU");
@@ -19,16 +16,16 @@ function runAPI(report) {
 		case "null":
 			alert("no network selected");
 	}
-	console.log("API DETAILS", report);
+	console.log("API DETAILS", api_parts);
 	fetch(
 		"https://classic.avantlink.com/api.php?module=AdminReport&auth_key=" +
 			API_KEY +
 			"&merchant_id=" +
 			merchant.id +
 			"&merchant_parent_id=0&affiliate_id=0&website_id=0&date_begin=" +
-			startDate +
+			api_parts.startDate +
 			"&date_end=" +
-			endDate +
+			api_parts.endDate +
 			"&affiliate_group_id=0&report_id=" +
 			report_id +
 			"&output=xml" +
@@ -44,7 +41,7 @@ function runAPI(report) {
 		)
 		.then((data) =>
 			// console.log(data)
-			reportStep2(data, report_id, startDate, endDate)
+			reportStep2(data, report_id, startDate, endDate, api_parts.type)
 		);
 }
 function getSelectedValue() {
@@ -61,121 +58,22 @@ function getSelectedValue() {
 	console.log("No Account Type selected");
 	return null;
 }
-function reportStep2(xml, report_id) {
+function reportStep2(xml, report_id, start, end, type) {
 	console.log("API STEP 2:", report_id, startDate, endDate);
 	switch (report_id) {
 		case 96:
-			console.log(xml);
-			let subAffiliates = [];
-			xmlDoc = xml.getElementsByTagName("Table1");
-			console.log(xmlDoc.length);
-			console.log(
-				xmlDoc[0].getElementsByTagName("Sub_Affiliate_Domain")[0]
-			);
-			for (let i = 0; i < xmlDoc.length; i++) {
-				let isSub = "";
-				if (
-					xmlDoc[i].getElementsByTagName("Sub_Affiliate_Domain")[0]
-						.childNodes[0] &&
-					xmlDoc[i].getElementsByTagName("Sub_Affiliate_Domain")[0]
-						.childNodes[0].nodeValue
-				) {
-					isSub = xmlDoc[i].getElementsByTagName(
-						"Sub_Affiliate_Domain"
-					)[0].childNodes[0].nodeValue;
-				}
-				subAffiliates.push({
-					Affiliate:
-						xmlDoc[i].getElementsByTagName("Affiliate_Name")[0]
-							.childNodes[0].nodeValue,
-					Click_Throughs: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Click_Throughs")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Affiliate_Id:
-						xmlDoc[i].getElementsByTagName("Affiliate_Id")[0]
-							.childNodes[0].nodeValue,
-					Number_of_Sales: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Number_of_Sales")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Sales: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Sales")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Commissions: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Commissions")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Network_Commissions: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Network_Commissions")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Sub_Affiliate_Domain: isSub,
-					Incentives: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Incentives")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Conversion_Rate: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Conversion_Rate")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("%", "")
-					),
-					New_Customers: Number(
-						xmlDoc[i]
-							.getElementsByTagName("New_Customers")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					New_Customer_Sales: Number(
-						xmlDoc[i]
-							.getElementsByTagName("New_Customer_Sales")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Mobile_Sales: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Mobile_Sales")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-					Number_of_Mobile_Sales: Number(
-						xmlDoc[i]
-							.getElementsByTagName("Number_of_Mobile_Sales")[0]
-							.childNodes[0].nodeValue.replaceAll(",", "")
-							.replaceAll("$", "")
-					),
-				});
-				subAffiliates[i].Total_Commission =
-					subAffiliates[i].Commissions +
-					subAffiliates[i].Network_Commissions +
-					subAffiliates[i].Incentives;
-				subAffiliates[i].roa =
-					subAffiliates[i].Sales / subAffiliates[i].Total_Commission;
-			}
-			subAffiliates.sort(function (a, b) {
-				return b.Sales - a.Sales;
-			});
+			//Sub-Affiliate Performance Report
+			subAffiliates = subaffData(xml);
 			console.log(subAffiliates);
 			report.subAffiliates = subAffiliates;
 			buildSubAffTable(report.subAffiliates);
 			break;
 		case 48:
+			// Performance Summary by Month
+			console.log(type);
 			let monthCount = xmlDoc.getElementsByTagName("Month").length;
 			console.log(monthCount);
+			data.monthlyPerformanceSummary = [];
 			for (i = 0; i < monthCount; i++) {
 				let m = {};
 				m.Month =
@@ -275,22 +173,47 @@ function reportStep2(xml, report_id) {
 				data.monthlyPerformanceSummary.push(m);
 			}
 			console.log(data);
-			runAPI({
-				report_id: 1,
-				startDate: startDate,
-				endDate: endDate,
-			});
 			console.log(data.monthlyPerformanceSummary);
-			report.monthArray = data.monthlyPerformanceSummary;
-			buildYTDTable();
-			drawSalesVConversionChart(
-				"Monthly Sales and Conversions",
-				"monthlyPerformanceGraph",
-				"test"
-			);
-
+			if (type === "standard") {
+				runAPI({
+					report_id: 1,
+					startDate: startDate,
+					endDate: endDate,
+				});
+				report.monthArray = data.monthlyPerformanceSummary;
+				buildYTDTable();
+				drawSalesVConversionChart(
+					"Monthly Sales and Conversions",
+					"monthlyPerformanceGraph",
+					"test"
+				);
+			} else if (type === "yoy") {
+				report.monthArray = data.monthlyPerformanceSummary;
+				data.primaryMonths = data.monthlyPerformanceSummary;
+				runAPI({
+					type: "ly",
+					report_id: 48,
+					startDate: lyStartDate,
+					endDate: lyEndDate,
+				});
+			} else if (type === "ly") {
+				data.priorMonths = data.monthlyPerformanceSummary;
+				runAPI({
+					report_id: 1,
+					startDate: startDate,
+					endDate: endDate,
+				});
+				report.lyMonthArray = data.monthlyPerformanceSummary;
+				buildYoyMonthlyTable();
+				drawYoySalesVConversionChart(
+					"Monthly Sales and Conversions",
+					"monthlyPerformanceGraph",
+					"test"
+				);
+			}
 			break;
 		case 18:
+			// Product Sold Report
 			console.log(xmlDoc.getElementsByTagName("Product_SKU").length);
 			if (
 				xmlDoc.getElementsByTagName("Product_SKU").length <
@@ -329,62 +252,15 @@ function reportStep2(xml, report_id) {
 			);
 
 			break;
-		// case 12:
-		// MAY COME BACK TO THIS> MAY RUN IN THE SCENARIO WHERE ONLY ONE MONTH IS SELECTED
-		// 	let days = xmlDoc.getElementsByTagName("Sales").length;
-		// 	console.log(days);
-		// 	let dailyArr = [["Day", "Sales", "Conversion Rate"]];
-		// 	let secondArr = [["Day", "Number of Sales", "Conversion Rate"]];
-		// 	for (let i = 0; i < days; i++) {
-		// 		dailyArr.push([
-		// 			removeYearFromDate(
-		// 				xmlDoc.getElementsByTagName("Date")[i].textContent
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Sales")
-		// 					[i].innerHTML.replaceAll(",", "")
-		// 					.replaceAll("$", "")
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Conversion_Rate")
-		// 					[i].innerHTML.replaceAll("%", "")
-		// 			) / 100,
-		// 		]);
-		// 		secondArr.push([
-		// 			removeYearFromDate(
-		// 				xmlDoc.getElementsByTagName("Date")[i].textContent
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Number_of_Sales")
-		// 					[i].innerHTML.replaceAll(",", "")
-		// 					.replaceAll("$", "")
-		// 			),
-		// 			Number(
-		// 				xmlDoc
-		// 					.getElementsByTagName("Conversion_Rate")
-		// 					[i].innerHTML.replaceAll("%", "")
-		// 			) / 100,
-		// 		]);
-		// 	}
-		// 	console.log(dailyArr);
-		// 	data.SaleNumPerformance = secondArr;
-		// 	data.dailyPerformance = dailyArr;
-		// 	drawDailySalesVConversionChart(
-		// 		"Daily Sales and Conversions",
-		// 		"dailyPerformanceGraph",
-		// 		"sales"
-		// 	);
-		// 	break;
-		case 1: //Performance Summary
+		case 1:
+			//Performance Summary
 			console.log(xml);
+			console.log(xmlDoc);
 			merchant.name =
 				xmlDoc.getElementsByTagName(
 					"Merchant"
 				)[0].childNodes[0].nodeValue;
-			// ------------------
+
 			let totals = {};
 
 			totals.Ad_Impressions = Number(
@@ -491,7 +367,8 @@ function reportStep2(xml, report_id) {
 			// removeDisabledButton("viewReport");
 			console.log("end performance setting");
 			break;
-		case 15: //Performance Summary by Affiliate for selected dates
+		case 15:
+			//Performance Summary by Affiliate for selected dates
 			let affiliates = [];
 			xmlDoc = xml.getElementsByTagName("Table1");
 			console.log(xmlDoc.length);
