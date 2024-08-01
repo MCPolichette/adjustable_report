@@ -32,3 +32,21 @@ function getLastDayOfMonth(yearMonth) {
 
 	return `${yearStr}-${monthStr}-${dayStr}`;
 }
+function getLastYearEndDate(yearMonth) {
+	const [selectedYear, month] = yearMonth.split("-").map(Number);
+	const year = selectedYear - 1;
+	// Create a date for the first day of the next month
+	const date = new Date(year, month, 0);
+
+	// Get the last day of the month in YYYY-MM-DD format
+	const yearStr = date.getFullYear();
+	const monthStr = String(date.getMonth() + 1).padStart(2, "0");
+	const dayStr = String(date.getDate()).padStart(2, "0");
+	return `${yearStr}-${monthStr}-${dayStr}`;
+}
+function getLyStart(yearMonth) {
+	const [selectedYear, month] = yearMonth.split("-").map(Number);
+	const year = selectedYear - 1;
+
+	return `${year}-${month}-01`;
+}

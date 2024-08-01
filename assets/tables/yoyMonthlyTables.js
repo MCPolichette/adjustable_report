@@ -1,54 +1,98 @@
 function buildYoyMonthlyTable() {
 	let table = document.getElementById("ytdSummaryReport");
 	let thead = document.getElementById("ytdSummaryTHead");
+	table.classList.add("yoyTable");
 	let summaryHeadersArray = [
 		"Month",
 		"Revenue \n Gross",
-		"Prior Year\n Revenue \nGross",
-		"Revenue\n difference",
+		"Prior\n Year\n Revenue \nGross",
+		"Revenue\n change",
 		"Orders \n Gross",
-		"Prior Year\n Orders \nGross",
-		"Orders\n difference",
-		"Total Network Spend",
-		"Prior Year\n Total NetworkSpend",
-		"Total\n difference",
+		"Prior\n Year\n Orders \nGross",
+		"Orders\n change",
+		"Total \nNetwork \nSpend",
+		"Prior\n Year\n Total \nNetwork \nSpend",
+		"Total\n change",
 		"Clicks",
-		"Prior Year\n Clicks",
-		"Clicks\n difference",
+		"Prior\n Year\n Clicks",
+		"Clicks\n change",
 		"Impressions",
-		"Prior Year\n Impressions",
-		"Impressions\n difference",
+		"Prior\n Year\n Impressions",
+		"Impressions\n change",
 		"CR",
-		"Prior Year\n CR",
-		"CR\n difference",
+		"Prior\n Year\n CR",
+		"CR\n change",
 	];
 	for (var i = 0; i < summaryHeadersArray.length; i++) {
 		thead
 			.appendChild(document.createElement("th"))
 			.appendChild(document.createTextNode(summaryHeadersArray[i]));
 	}
-	console.log(data.monthlyPerformanceSummary);
+	console.log(report.monthArray);
 	table.style.textAlign = "right";
-	for (var j = 0; j < data.monthlyPerformanceSummary.length; j++) {
+	for (var j = 0; j < report.monthArray.length; j++) {
 		console.log("ATTENTION!!!!!", j);
+		let Click_ThroughChange =
+			report.monthArray[j].Click_Throughs -
+			report.lyMonthArray[j].Click_Throughs;
+		let Ad_ImpressionChange =
+			report.monthArray[j].Ad_Impressions -
+			report.lyMonthArray[j].Ad_Impressions;
+		let SaleChange =
+			report.monthArray[j].Sales - report.lyMonthArray[j].Sales;
+		let Number_of_SalesChange =
+			report.monthArray[j].Number_of_Sales -
+			report.lyMonthArray[j].Number_of_Sales;
+		let TotalNetworkSpend =
+			report.monthArray[j].Network_Commissions +
+			report.monthArray[j].Commissions +
+			report.monthArray[j].Incentives;
+		let LyTotalNetworkSpend =
+			report.lyMonthArray[j].Network_Commissions +
+			report.lyMonthArray[j].Commissions +
+			report.lyMonthArray[j].Incentives;
+		let NetworkSpendChange = TotalNetworkSpend - LyTotalNetworkSpend;
+
+		let Conversion_RateChange =
+			report.monthArray[j].Conversion_Rate -
+			report.lyMonthArray[j].Conversion_Rate;
+
 		buildRow(table, j, [
-			data.monthlyPerformanceSummary[j].Month,
-			toUSD(data.monthlyPerformanceSummary[j].Sales),
-			data.monthlyPerformanceSummary[j].Number_of_Sales,
-			toUSD(
-				data.monthlyPerformanceSummary[j].Network_Commissions +
-					data.monthlyPerformanceSummary[j].Commissions +
-					data.monthlyPerformanceSummary[j].Incentives
-			),
-			data.monthlyPerformanceSummary[j].Click_Throughs,
-			data.monthlyPerformanceSummary[j].Click_Throughs,
-			data.monthlyPerformanceSummary[j].Click_Throughs,
-			data.monthlyPerformanceSummary[j].Ad_Impressions,
-			data.monthlyPerformanceSummary[j].Ad_Impressions,
-			data.monthlyPerformanceSummary[j].Ad_Impressions,
-			data.monthlyPerformanceSummary[j].Conversion_Rate + "%",
-			data.monthlyPerformanceSummary[j].Conversion_Rate + "%",
-			data.monthlyPerformanceSummary[j].Conversion_Rate + "%",
+			report.monthArray[j].Month,
+			toUSD(report.monthArray[j].Sales),
+			toUSD(report.lyMonthArray[j].Sales),
+			applyIcon(SaleChange) + isNegOrPos(SaleChange) + toUSD(SaleChange),
+			//vertical line
+			report.monthArray[j].Number_of_Sales,
+			report.lyMonthArray[j].Number_of_Sales,
+			applyIcon(Number_of_SalesChange) +
+				isNegOrPos(Number_of_SalesChange) +
+				Number_of_SalesChange,
+			//vertical line
+			toUSD(TotalNetworkSpend),
+			toUSD(LyTotalNetworkSpend),
+			applyIcon(NetworkSpendChange) +
+				isNegOrPos(NetworkSpendChange) +
+				toUSD(NetworkSpendChange),
+			//vertical line
+			report.monthArray[j].Click_Throughs,
+			report.lyMonthArray[j].Click_Throughs,
+			applyIcon(Click_ThroughChange) +
+				isNegOrPos(Click_ThroughChange) +
+				Click_ThroughChange,
+			//verticle line
+			report.monthArray[j].Ad_Impressions,
+			report.lyMonthArray[j].Ad_Impressions, //ly
+			applyIcon(Ad_ImpressionChange) +
+				isNegOrPos(Ad_ImpressionChange) +
+				Ad_ImpressionChange,
+			//verticle line
+			report.monthArray[j].Conversion_Rate + "%",
+			report.lyMonthArray[j].Conversion_Rate + "%", //ly
+			applyIcon(Conversion_RateChange) +
+				isNegOrPos(Conversion_RateChange) +
+				Conversion_RateChange.toFixed(2),
+			//verticle line
 		]);
 	}
 }

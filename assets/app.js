@@ -1,5 +1,6 @@
 // global variables
 var merchant = {};
+var xmlDoc;
 var report = {
 	hideYoY: true,
 	yoyPerformance: [],
@@ -13,15 +14,20 @@ var report = {
 	topAffiliateCount: 10,
 	itemCount: 10,
 	monthArray: [],
+	yoyMonthArray: [],
 	showMobile: true,
 	yoy: false,
 };
 var startDate = "";
 var endDate = "";
+var lyStartDate = "";
+var lyEndDate = "";
 var data = {
 	monthlyPerformanceSummary: [],
 	notablePerformers: { one: [], two: [], three: [] },
 	newAffs: {},
+	primaryMonths: [],
+	priorMonths: [],
 };
 function isNumber(value) {
 	return typeof value === "number" && isFinite(value);
@@ -55,6 +61,7 @@ function hideRow(rowId, btnId) {
 		row.hidden = true;
 	}
 }
+// !!CREATE BUTTON SCRIPT FILE
 function removeDisabledButton(id) {
 	let btn = document.getElementById(id);
 	btn.disabled = false;
@@ -150,6 +157,8 @@ function perfomance_report() {
 		report.yoy = true;
 		document.getElementById("merchantCardReportType").innerHTML =
 			"YOY REPORT";
+	} else {
+		report.yoy = false;
 	}
 	// SETTING DATES W/ updated selector
 
@@ -157,12 +166,13 @@ function perfomance_report() {
 		alert("Please select both start and end month/year.");
 		return;
 	}
-
 	startDate = startMonth + "-01";
 	endDate = getLastDayOfMonth(endMonth);
+	lyStartDate = getLyStart(startMonth);
+	lyEndDate = getLastYearEndDate(endMonth);
 	console.log(endDate);
 	console.log(startDate);
-
+	console.log("PRIOR YEAR DATES : " + lyStartDate + lyEndDate);
 	const today = new Date();
 	today.setHours(0, 0, 0, 0); // Reset to midnight for accurate comparison
 	const startOfNextMonth = new Date(
@@ -193,14 +203,20 @@ function perfomance_report() {
 	}
 
 	if (acceptableData === true) {
-		switch (yoy) {
-			case false:
-				runAPI({
-					type: yoy,
-					report_id: 48,
-					startDate: startDate,
-					endDate: endDate,
-				});
+		if (report.yoy) {
+			runAPI({
+				type: "yoy",
+				report_id: 48,
+				startDate: startDate,
+				endDate: endDate,
+			});
+		} else {
+			runAPI({
+				type: "standard",
+				report_id: 48,
+				startDate: startDate,
+				endDate: endDate,
+			});
 		}
 	}
 }

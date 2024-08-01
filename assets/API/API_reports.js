@@ -1,7 +1,5 @@
-function runAPI(report) {
-	startDate = report.startDate;
-	endDate = report.endDate;
-	report_id = report.report_id;
+function runAPI(api_parts) {
+	report_id = api_parts.report_id;
 	let network = "";
 	switch (getSelectedValue()) {
 		case "CA":
@@ -18,16 +16,16 @@ function runAPI(report) {
 		case "null":
 			alert("no network selected");
 	}
-	console.log("API DETAILS", report);
+	console.log("API DETAILS", api_parts);
 	fetch(
 		"https://classic.avantlink.com/api.php?module=AdminReport&auth_key=" +
 			API_KEY +
 			"&merchant_id=" +
 			merchant.id +
 			"&merchant_parent_id=0&affiliate_id=0&website_id=0&date_begin=" +
-			startDate +
+			api_parts.startDate +
 			"&date_end=" +
-			endDate +
+			api_parts.endDate +
 			"&affiliate_group_id=0&report_id=" +
 			report_id +
 			"&output=xml" +
@@ -43,7 +41,7 @@ function runAPI(report) {
 		)
 		.then((data) =>
 			// console.log(data)
-			reportStep2(data, report_id, startDate, endDate, report.type)
+			reportStep2(data, report_id, startDate, endDate, api_parts.type)
 		);
 }
 function getSelectedValue() {
@@ -72,8 +70,10 @@ function reportStep2(xml, report_id, start, end, type) {
 			break;
 		case 48:
 			// Performance Summary by Month
+			console.log(type);
 			let monthCount = xmlDoc.getElementsByTagName("Month").length;
 			console.log(monthCount);
+			data.monthlyPerformanceSummary = [];
 			for (i = 0; i < monthCount; i++) {
 				let m = {};
 				m.Month =
@@ -173,20 +173,44 @@ function reportStep2(xml, report_id, start, end, type) {
 				data.monthlyPerformanceSummary.push(m);
 			}
 			console.log(data);
-			runAPI({
-				report_id: 1,
-				startDate: startDate,
-				endDate: endDate,
-			});
 			console.log(data.monthlyPerformanceSummary);
-			report.monthArray = data.monthlyPerformanceSummary;
-			buildYTDTable();
-			drawSalesVConversionChart(
-				"Monthly Sales and Conversions",
-				"monthlyPerformanceGraph",
-				"test"
-			);
-
+			if (type === "standard") {
+				runAPI({
+					report_id: 1,
+					startDate: startDate,
+					endDate: endDate,
+				});
+				report.monthArray = data.monthlyPerformanceSummary;
+				buildYTDTable();
+				drawSalesVConversionChart(
+					"Monthly Sales and Conversions",
+					"monthlyPerformanceGraph",
+					"test"
+				);
+			} else if (type === "yoy") {
+				report.monthArray = data.monthlyPerformanceSummary;
+				data.primaryMonths = data.monthlyPerformanceSummary;
+				runAPI({
+					type: "ly",
+					report_id: 48,
+					startDate: lyStartDate,
+					endDate: lyEndDate,
+				});
+			} else if (type === "ly") {
+				data.priorMonths = data.monthlyPerformanceSummary;
+				runAPI({
+					report_id: 1,
+					startDate: startDate,
+					endDate: endDate,
+				});
+				report.lyMonthArray = data.monthlyPerformanceSummary;
+				buildYoyMonthlyTable();
+				drawYoySalesVConversionChart(
+					"Monthly Sales and Conversions",
+					"monthlyPerformanceGraph",
+					"test"
+				);
+			}
 			break;
 		case 18:
 			// Product Sold Report
@@ -231,6 +255,7 @@ function reportStep2(xml, report_id, start, end, type) {
 		case 1:
 			//Performance Summary
 			console.log(xml);
+			console.log(xmlDoc);
 			merchant.name =
 				xmlDoc.getElementsByTagName(
 					"Merchant"
