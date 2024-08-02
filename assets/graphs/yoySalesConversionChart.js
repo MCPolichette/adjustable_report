@@ -12,7 +12,6 @@ function drawYoySalesVConversionChart(title, divId, hAxisTitle) {
 		]);
 	}
 
-	arr.reverse();
 	arr.unshift([
 		"Month",
 		"Sales",

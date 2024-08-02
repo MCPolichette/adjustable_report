@@ -1,7 +1,7 @@
 function buildRow(table, row, columns) {
 	var row = table.insertRow(row);
-	for (i = 0; i < columns.length; i++) {
-		var cell = (row.insertCell(i).innerHTML = columns[i]);
+	for (z = 0; z < columns.length; z++) {
+		var cell = (row.insertCell(z).innerHTML = columns[z]);
 	}
 }
 function updateTableCell(tableId, rowNum, colNum, newText) {
