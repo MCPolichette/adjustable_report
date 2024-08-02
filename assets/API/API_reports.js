@@ -204,7 +204,8 @@ function reportStep2(xml, report_id, start, end, type) {
 					endDate: endDate,
 				});
 				report.lyMonthArray = data.monthlyPerformanceSummary;
-				buildYoyMonthlyTable();
+				// buildYoyMonthlyTable();
+				buildIndividualyoytables();
 				drawYoySalesVConversionChart(
 					"Monthly Sales and Conversions",
 					"monthlyPerformanceGraph",
