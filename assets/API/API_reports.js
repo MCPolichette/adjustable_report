@@ -209,7 +209,7 @@ function reportStep2(xml, report_id, start, end, type) {
 				drawYoySalesVConversionChart(
 					"Monthly Sales and Conversions",
 					"monthlyPerformanceGraph",
-					"test"
+					""
 				);
 			}
 			break;
