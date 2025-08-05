@@ -3,7 +3,7 @@ function subaffData(xml) {
 	let subAffiliates = [];
 	xmlDoc = xml.getElementsByTagName("Table1");
 	console.log(xmlDoc.length);
-	console.log(xmlDoc[0].getElementsByTagName("Sub_Affiliate_Domain")[0]);
+	// console.log(xmlDoc[0].getElementsByTagName("Sub_Affiliate_Domain")[0]);
 	for (let i = 0; i < xmlDoc.length; i++) {
 		let isSub = "";
 		if (

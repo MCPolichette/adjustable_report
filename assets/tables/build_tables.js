@@ -171,10 +171,19 @@ function buildAffiliateTable(array) {
 	}
 	if (report.topAffiliateCount) {
 		for (let i = 0; i < report.topAffiliateCount; i++) {
-			console.log(array.length);
+			console.log(i, array[i]);
+
 			if (array[i].Sales > 0) {
+				// Sanitize & truncate the name
+				let cleanName = array[i].Affiliate.replace(/\?.*$/, "") // Remove everything from "?" onwards
+					.slice(0, 30); // Limit to 30 characters
+
+				if (array[i].Affiliate.length > 30) {
+					cleanName += "..."; // Add ellipsis if truncated
+				}
+
 				buildRow(table, i, [
-					array[i].Affiliate,
+					cleanName,
 					array[i].Ad_Impressions,
 					array[i].Click_Throughs,
 					toUSD(array[i].Sales),
@@ -185,6 +194,7 @@ function buildAffiliateTable(array) {
 			}
 		}
 	}
+
 	console.log("afftable populated");
 	affiliateReportButton.disabled = true;
 }

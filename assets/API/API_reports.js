@@ -61,6 +61,9 @@ function getSelectedValue() {
 function reportStep2(xml, report_id, start, end, type) {
 	console.log("API STEP 2:", report_id, startDate, endDate);
 	switch (report_id) {
+		case 8:
+			console.log("Sales commission detail report not available");
+			break;
 		case 96:
 			//Sub-Affiliate Performance Report
 			subAffiliates = subaffData(xml);
@@ -209,7 +212,7 @@ function reportStep2(xml, report_id, start, end, type) {
 				drawYoySalesVConversionChart(
 					"Monthly Sales and Conversions",
 					"monthlyPerformanceGraph",
-					"test"
+					""
 				);
 			}
 			break;
@@ -399,6 +402,8 @@ function reportStep2(xml, report_id, start, end, type) {
 							.getElementsByTagName("Sales")[0]
 							.childNodes[0].nodeValue.replaceAll(",", "")
 							.replaceAll("$", "")
+							.replaceAll("(", "-")
+							.replaceAll(")", "")
 					),
 					Commissions: Number(
 						xmlDoc[i]

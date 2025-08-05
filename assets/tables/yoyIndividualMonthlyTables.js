@@ -1,3 +1,7 @@
+function monthFormat(input) {
+	const [year, month] = input.split("-");
+	return `${month} \n${year}`;
+}
 function buildIndividualyoytables() {
 	console.log("building tables for yoy monthly displays");
 	hide(["ytdSummaryReport"]);
@@ -21,11 +25,11 @@ function buildIndividualyoytables() {
 		table.className = "table"; // Add Bootstrap table class
 		let headersArray = [
 			" ",
-			thisStep.monthArray[i].Month,
-			thisStep.lyMonthArray[i].Month,
+			monthFormat(thisStep.monthArray[i].Month),
+			monthFormat(thisStep.lyMonthArray[i].Month),
 			"% Change",
 			"",
-			"Nominal Change",
+			"Nominal \nChange",
 		];
 
 		for (var j = 0; j < headersArray.length; j++) {
@@ -50,7 +54,7 @@ function buildIndividualyoytables() {
 			table,
 			0,
 			dollarRowValues(
-				"Avg Sale Amount",
+				"Avg\n Sale Amount",
 				thisStep.monthArray[i].Average_Sale_Amount,
 				thisStep.lyMonthArray[i].Average_Sale_Amount
 			)
@@ -88,8 +92,23 @@ function buildIndividualyoytables() {
 		newCol.appendChild(table);
 		table.className = "table table-striped text-end table-sm";
 		dispRow.appendChild(newCol);
-		if (i === 8) {
-			newCol.className = "col-6 page-break";
+		//page breaks every 8 tables.
+		// Add page break at 8 and then every 10th table after 8
+		if (i === 8 || (i > 8 && (i - 8) % 10 === 0)) {
+			newCol.classList.add("page-break");
+		}
+		if (i === thisStep.monthArray.length) {
+			if (
+				(i >= 0 && i <= 3) ||
+				(i >= 8 && i <= 14) ||
+				(i >= 18 && i <= 24) ||
+				(i >= 28 && i <= 34)
+			) {
+				console.log("removing last pagebreak");
+				document
+					.getElementById("graphicDisplay")
+					.classList.remove("page-break");
+			}
 		}
 	}
 }
@@ -99,7 +118,9 @@ function dollarRowValues(text, m1, m2, x) {
 	let posOrNeg = "+";
 	let value = m1 - m2;
 	let percent;
-	if (value < 0) {
+	if (m2 === 0) {
+		return [text, toUSD(m1), 0, 0, " ", posOrNeg + m1];
+	} else if (value < 0) {
 		icon = icons.down;
 		posOrNeg = "";
 		percent = "-" + (((m2 - m1) / m2) * 100).toFixed(2);
@@ -110,10 +131,10 @@ function dollarRowValues(text, m1, m2, x) {
 	return [
 		text,
 		toUSD(m1),
-		toUSD(value),
+		toUSD(m2),
 		posOrNeg + percent + "%",
 		icon,
-		value,
+		posOrNeg + value,
 	];
 }
 function otherRowValues(text, m1, m2, x) {
@@ -121,7 +142,9 @@ function otherRowValues(text, m1, m2, x) {
 	let posOrNeg = "+";
 	let value = m1 - m2;
 	let percent;
-	if (value < 0) {
+	if (m2 === 0) {
+		return [text, toUSD(m1), 0, 0, " ", posOrNeg + m1];
+	} else if (value < 0) {
 		icon = icons.down;
 		posOrNeg = "";
 		percent = "-" + (((m2 - m1) / m2) * 100).toFixed(2);
