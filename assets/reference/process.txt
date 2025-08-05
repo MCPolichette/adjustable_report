@@ -6,3 +6,8 @@ API should run process.
 return(data)
 
 MAP should return data. and trigger next with previous years months.
+
+- infinity results. > BE 0 same with Nominal Change
+- REMOVE TEST from the graph
+- work on page breaks, and sizing in cases of 40 months.
+- reverse order. 
